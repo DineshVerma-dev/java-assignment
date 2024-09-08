@@ -4,7 +4,7 @@ public class Result {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
-        // Create table for students including term works
+       
         Table student1 = new Table();
         student1.createTable(sc);
 
@@ -39,7 +39,7 @@ class Subject {
         }
     }
 
-    // Method to calculate pointer based on percentage
+   
     public void calculatePointer() {
         if (percentage >= 80) {
             pointer = 10;
@@ -84,7 +84,7 @@ class Table {
 
     public Table() {
         subjects = new Subject[] {
-            // External subjects with corresponding credits
+           
             new Subject(" EM-II     ", 80, 4),
             new Subject(" EP-II     ", 60, 4),
             new Subject(" EC-II     ", 60, 3),
@@ -129,21 +129,20 @@ class Table {
             subjects[i].marksObtained = sc.nextInt();
             subjects[i].calculateResult();
 
-            // Count internal KTs (for internal subjects with total marks less than or equal to 20)
+            
             if (subjects[i].totalMarks <= 20 && subjects[i].result.equals("F")) {
                 internalKTs++;
             }
-            // Count external KTs (for external subjects with total marks greater than 20 and not term work)
+           
             if (subjects[i].totalMarks > 20 && subjects[i].totalMarks != 25 && subjects[i].result.equals("F")) {
                 externalKTs++;
             }
-            // Count term work KTs (for subjects with total marks of 25)
+           
             if (subjects[i].totalMarks == 25 && subjects[i].result.equals("F")) {
                 termWorkKTs++;
             }
 
-            // Multiply pointer with credits for CGPA calculation
-            if (subjects[i].credit > 0) { // Only include subjects with non-zero credits
+            if (subjects[i].credit > 0) { 
                 obtainedCredited += subjects[i].pointer * subjects[i].credit;
                 totalCredits += subjects[i].credit;
             }
@@ -154,7 +153,7 @@ class Table {
 
         int totalKTs = internalKTs + externalKTs;
            
-        // Display all subjects with their marks and results at the end
+       
         System.out.println("\nSubject             Total Marks        Marks Obtained        Pass/Fail        Percentage        Pointer");
         System.out.println("-".repeat(100));
         for (int i = 0; i < subjects.length; i++) {
@@ -163,7 +162,7 @@ class Table {
 
         System.out.println("-".repeat(100));
 
-        // Display the total number of KTs
+        
         System.out.println("\nResults for " + name);
         System.out.println("Total Internal KTs: " + internalKTs);
         System.out.println("Total External KTs: " + externalKTs);
@@ -171,7 +170,7 @@ class Table {
         System.out.println("Total Marks obtained: " + totalMarksOfStudent);
         System.out.println("Totalmarks : "+totalMarksOutoff);
 
-        // Check for year drop condition
+        
         if (totalKTs > 9) {
             System.out.println("Year drop");
         }

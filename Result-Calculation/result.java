@@ -86,13 +86,13 @@ class Table {
         subjects = new Subject[] {
 
                 new Subject(" EM-II     ", 80, 4),
-                new Subject(" EP-II     ", 60, 4),
+                new Subject(" EP-II     ", 60, 3),
                 new Subject(" EC-II     ", 60, 3),
                 new Subject(" EG        ", 60, 2),
                 new Subject(" CP        ", 60, 1),
                 new Subject(" PCE-I     ", 40, 1),
 
-                // Internal subjects (no credits included for internal in this example)
+               
                 new Subject(" maths     ", 20, 0),
                 new Subject(" physics   ", 15, 0),
                 new Subject(" chemistry ", 15, 0),
@@ -100,7 +100,7 @@ class Table {
                 new Subject(" c programm", 15, 0),
                 new Subject(" PCE-Iinter", 15, 0),
 
-                // Term work subjects with credits
+               
                 new Subject(" EM-II TW  ", 25, 1),
                 new Subject(" EP-II TW  ", 25, 1),
                 new Subject(" EC-II TW  ", 25, 1),
@@ -132,7 +132,7 @@ class Table {
             subjects[i].calculateResult();
 
             if (subjects[i].result.equals("F")) {
-                hasFailed = true; // Set flag if the student has failed any subject
+                hasFailed = true;
             }
 
             if (subjects[i].totalMarks <= 20 && subjects[i].result.equals("F")) {

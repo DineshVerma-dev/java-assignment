@@ -18,18 +18,21 @@ class Subject {
     String result;
     double percentage;
     int pointer;
-    int credit;
+    double credit;
     String grade;
 
-    public Subject(String subname, int totalMarks, int credit) {
+    int combinedMarks; // combined marks of external + internal
+    int combinedTotal; // combined total marks of external + internal
+
+    public Subject(String subname, int totalMarks, double credit) {
         this.subname = subname;
         this.totalMarks = totalMarks;
         this.credit = credit;
     }
 
     public void calculateResult() {
-        percentage = ((double) marksObtained / totalMarks) * 100;
-        if (marksObtained < 0.4 * totalMarks) {
+        percentage = ((double) combinedMarks / combinedTotal) * 100;
+        if (combinedMarks < 0.4 * combinedTotal) {
             result = "F"; // Fail
             pointer = 0;
         } else {
@@ -71,43 +74,48 @@ class Subject {
     }
 
     public void displaySubject() {
-
         double roundedPercentage = roundToThreeDecimal(percentage);
-        System.out.println("-".repeat(100));
-        System.out.println(subname + "               " + totalMarks + "                " + marksObtained
-                + "                " + grade + "              " + roundedPercentage + "               " + pointer);
+        System.out.println("-".repeat(110));
+        System.out.println(subname + "                 " + combinedTotal + "                 " + combinedMarks
+                + "                 " + grade + "                 " + roundedPercentage + "                 " + pointer);
     }
 }
 
 class Table {
-    Subject[] subjects;
+    Subject[] externalSubjects;
+    Subject[] internalSubjects;
+    Subject[] termWorkSubjects;
 
     public Table() {
-        subjects = new Subject[] {
-
+        // External subjects
+        externalSubjects = new Subject[] {
                 new Subject(" EM-II     ", 80, 4),
-                new Subject(" EP-II     ", 60, 3),
-                new Subject(" EC-II     ", 60, 3),
+                new Subject(" EP-II     ", 60, 2),
+                new Subject(" EC-II     ", 60, 2),
                 new Subject(" EG        ", 60, 2),
-                new Subject(" CP        ", 60, 1),
-                new Subject(" PCE-I     ", 40, 1),
+                new Subject(" CP        ", 60, 2),
+                new Subject(" PCE-I     ", 40, 2),
+        };
 
-               
+        // Internal subjects
+        internalSubjects = new Subject[] {
                 new Subject(" maths     ", 20, 0),
                 new Subject(" physics   ", 15, 0),
                 new Subject(" chemistry ", 15, 0),
                 new Subject(" graphics  ", 15, 0),
                 new Subject(" c programm", 15, 0),
                 new Subject(" PCE-Iinter", 15, 0),
+        };
 
-               
+        // Term Work subjects
+        termWorkSubjects = new Subject[] {
                 new Subject(" EM-II TW  ", 25, 1),
-                new Subject(" EP-II TW  ", 25, 1),
-                new Subject(" EC-II TW  ", 25, 1),
-                new Subject(" EG TW     ", 25, 1),
+                new Subject(" EP-II TW  ", 25, 0.5),
+                new Subject(" EC-II TW  ", 25, 0.5),
+                new Subject(" EG TW     ", 25, 2),
                 new Subject(" CP TW     ", 25, 1),
                 new Subject(" PCE-I TW  ", 25, 1),
-                new Subject(" Workshop  ", 50, 2),
+                new Subject(" Workshop  ", 50, 1),
         };
     }
 
@@ -124,48 +132,79 @@ class Table {
         int obtainedCredited = 0; // To store the sum of (pointer * credit)
         int totalMarksOutoff = 0;
         boolean hasFailed = false;
-        int totalKTs; // Flag to track if the student has failed any subject
+        int totalKTs;
 
-        for (int i = 0; i < subjects.length; i++) {
-            System.out.print("Enter marks for " + subjects[i].subname + ": ");
-            subjects[i].marksObtained = sc.nextInt();
-            subjects[i].calculateResult();
+        System.out.println("-".repeat(110));
 
-            if (subjects[i].result.equals("F")) {
+        // External and internal subjects
+        for (int i = 0; i < externalSubjects.length; i++) {
+            System.out.print("Enter marks for External " + externalSubjects[i].subname + ": ");
+            externalSubjects[i].marksObtained = sc.nextInt();
+
+            System.out.print("Enter marks for Internal " + internalSubjects[i].subname + ": ");
+            internalSubjects[i].marksObtained = sc.nextInt();
+
+            // Combine internal and external marks and total
+            externalSubjects[i].combinedMarks = externalSubjects[i].marksObtained + internalSubjects[i].marksObtained;
+            externalSubjects[i].combinedTotal = externalSubjects[i].totalMarks + internalSubjects[i].totalMarks;
+
+            externalSubjects[i].calculateResult();
+
+            // Checking if failed
+            if (externalSubjects[i].combinedMarks < 0.4 * externalSubjects[i].combinedTotal) {
                 hasFailed = true;
+                if (externalSubjects[i].totalMarks > 20)
+                    externalKTs++;
+                else
+                    internalKTs++;
             }
 
-            if (subjects[i].totalMarks <= 20 && subjects[i].result.equals("F")) {
-                internalKTs++;
+            if (externalSubjects[i].credit > 0) {
+                obtainedCredited += externalSubjects[i].pointer * externalSubjects[i].credit;
+                totalCredits += externalSubjects[i].credit;
             }
 
-            if (subjects[i].totalMarks > 20 && subjects[i].totalMarks != 25 && subjects[i].result.equals("F")) {
-                externalKTs++;
-            }
+            totalMarksOfStudent += externalSubjects[i].combinedMarks;
+            totalMarksOutoff += externalSubjects[i].combinedTotal;
+        }
 
-            if (subjects[i].totalMarks == 25 && subjects[i].result.equals("F")) {
+        // Term work subjects
+        for (int i = 0; i < termWorkSubjects.length; i++) {
+            System.out.print("Enter marks for Term Work " + termWorkSubjects[i].subname + ": ");
+            termWorkSubjects[i].marksObtained = sc.nextInt();
+            termWorkSubjects[i].combinedMarks = termWorkSubjects[i].marksObtained;
+            termWorkSubjects[i].combinedTotal = termWorkSubjects[i].totalMarks;
+
+            termWorkSubjects[i].calculateResult();
+
+            if (termWorkSubjects[i].marksObtained < 0.4 * termWorkSubjects[i].totalMarks) {
+                hasFailed = true;
                 termWorkKTs++;
             }
 
-            if (subjects[i].credit > 0) {
-                obtainedCredited += subjects[i].pointer * subjects[i].credit;
-                totalCredits += subjects[i].credit;
+            if (termWorkSubjects[i].credit > 0) {
+                obtainedCredited += termWorkSubjects[i].pointer * termWorkSubjects[i].credit;
+                totalCredits += termWorkSubjects[i].credit;
             }
 
-            totalMarksOfStudent += subjects[i].marksObtained;
-            totalMarksOutoff += subjects[i].totalMarks;
+            totalMarksOfStudent += termWorkSubjects[i].marksObtained;
+            totalMarksOutoff += termWorkSubjects[i].totalMarks;
         }
+   
+        totalKTs = internalKTs + externalKTs + termWorkKTs;
+        int yearDropconditionKTs = internalKTs + externalKTs;
 
-        totalKTs = internalKTs + externalKTs;
-
-        System.out.println("-".repeat(100));
+        System.out.println("-".repeat(110));
         System.out.println(
-                "\nSubject             Total Marks        Marks Obtained        Pass/Fail        Percentage        Pointer");
-        for (int i = 0; i < subjects.length; i++) {
-            subjects[i].displaySubject();
+                "\nSubject             Combined Total        Combined Marks        Pass/Fail        Percentage        Pointer");
+        for (int i = 0; i < externalSubjects.length; i++) {
+            externalSubjects[i].displaySubject();
+        }
+        for (int i = 0; i < termWorkSubjects.length; i++) {
+            termWorkSubjects[i].displaySubject();
         }
 
-        System.out.println("-".repeat(100));
+        System.out.println("-".repeat(110));
 
         System.out.println("     ");
         System.out.println("\nResults for        " + name);
@@ -180,24 +219,22 @@ class Table {
         System.out.println("     ");
         System.out.println("Total Marks :        " + totalMarksOutoff);
         System.out.println("     ");
-        System.out.println("TotalKts             " + totalKTs);
+        System.out.println("Total KTs:           " + totalKTs);
         System.out.println("     ");
 
-        if (totalKTs > 9) {
+        if (yearDropconditionKTs > 9) {
             System.out.println("Year drop");
         }
 
         if (hasFailed) {
-
             System.out.println("Unsuccessful");
             System.out.println("     ");
         } else {
-
             double cgpa = (double) obtainedCredited / totalCredits;
             double roundedCGPA = roundToThreeDecimal(cgpa);
             System.out.println("CGPI : " + roundedCGPA);
         }
-        System.out.println("-".repeat(100));
+        System.out.println("-".repeat(110));
     }
 
     private double roundToThreeDecimal(double value) {

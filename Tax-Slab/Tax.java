@@ -38,6 +38,6 @@ class Slab {
             tax = (0.05 * 400000) + (0.1 * 300000) + (0.15 * 200000) + (0.2 * 300000) + 0.3 * (salary - 1500000);  // 30% for income above 15 lakh
         }
 
-        System.out.println("Total Tax to be paid: ₹ " + tax);
+        System.out.println("Total Tax to be paid: " + tax);
     }
 }

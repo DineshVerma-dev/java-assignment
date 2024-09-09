@@ -196,13 +196,14 @@ class Table {
 
         System.out.println("-".repeat(110));
         System.out.println(
-                "\nSubject             Combined Total        Combined Marks        Pass/Fail        Percentage        Pointer");
+                "\nSubject             Combined Total        Combined Marks         Grades         Percentage        Pointer");
         for (int i = 0; i < externalSubjects.length; i++) {
             externalSubjects[i].displaySubject();
         }
         for (int i = 0; i < termWorkSubjects.length; i++) {
             termWorkSubjects[i].displaySubject();
         }
+       
 
         System.out.println("-".repeat(110));
 

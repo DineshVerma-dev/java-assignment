@@ -3,10 +3,10 @@ import java.util.Scanner;
 public class Cricket {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        int balls = 6; 
+        int balls = 6;
         int fours = 0, sixes = 0, dotBalls = 0, wickets = 0;
         int b1Runs = 0, b2Runs = 0;
-        boolean strike = true; 
+        boolean strike = true;
 
         System.out.println("Enter the outcome for each ball (-1 for wicket, 0 for a dot ball, 1-6 for runs):");
         for (int i = 1; i <= balls; i++) {

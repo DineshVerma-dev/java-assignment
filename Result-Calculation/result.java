@@ -77,7 +77,8 @@ class Subject {
         double roundedPercentage = roundToThreeDecimal(percentage);
         System.out.println("-".repeat(110));
         System.out.println(subname + "                 " + combinedTotal + "                 " + combinedMarks
-                + "                 " + grade + "                 " + roundedPercentage + "                 " + pointer);
+                + "                 " + grade + "                 " + roundedPercentage + "                 "
+                + pointer);
     }
 }
 
@@ -190,7 +191,7 @@ class Table {
             totalMarksOfStudent += termWorkSubjects[i].marksObtained;
             totalMarksOutoff += termWorkSubjects[i].totalMarks;
         }
-   
+
         totalKTs = internalKTs + externalKTs + termWorkKTs;
         int yearDropconditionKTs = internalKTs + externalKTs;
 
@@ -203,7 +204,6 @@ class Table {
         for (int i = 0; i < termWorkSubjects.length; i++) {
             termWorkSubjects[i].displaySubject();
         }
-       
 
         System.out.println("-".repeat(110));
 

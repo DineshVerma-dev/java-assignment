@@ -88,27 +88,30 @@ class Table {
     Subject[] termWorkSubjects;
 
     public Table() {
-        // External subjects
+      
         externalSubjects = new Subject[] {
-                new Subject(" EM-II     ", 80, 4),
+                new Subject(" EM-II     ", 80, 3),
                 new Subject(" EP-II     ", 60, 2),
                 new Subject(" EC-II     ", 60, 2),
                 new Subject(" EG        ", 60, 2),
                 new Subject(" CP        ", 60, 2),
                 new Subject(" PCE-I     ", 40, 2),
+                new Subject(" EG-Pract..", 50, 1),
+                new Subject(" CP-Oral   ", 25, 1),
+
         };
 
-        // Internal subjects
+        
         internalSubjects = new Subject[] {
                 new Subject(" maths     ", 20, 0),
                 new Subject(" physics   ", 15, 0),
                 new Subject(" chemistry ", 15, 0),
                 new Subject(" graphics  ", 15, 0),
                 new Subject(" c programm", 15, 0),
-                new Subject(" PCE-Iinter", 15, 0),
+                new Subject(" PCE-Iinter", 10, 0),
         };
 
-        // Term Work subjects
+        
         termWorkSubjects = new Subject[] {
                 new Subject(" EM-II TW  ", 25, 1),
                 new Subject(" EP-II TW  ", 25, 0.5),
@@ -117,6 +120,7 @@ class Table {
                 new Subject(" CP TW     ", 25, 1),
                 new Subject(" PCE-I TW  ", 25, 1),
                 new Subject(" Workshop  ", 50, 1),
+
         };
     }
 
@@ -130,34 +134,45 @@ class Table {
         int termWorkKTs = 0;
         int totalMarksOfStudent = 0;
         int totalCredits = 0;
-        int obtainedCredited = 0; // To store the sum of (pointer * credit)
+        int obtainedCredited = 0; 
         int totalMarksOutoff = 0;
         boolean hasFailed = false;
         int totalKTs;
 
         System.out.println("-".repeat(110));
 
-        // External and internal subjects
+        
         for (int i = 0; i < externalSubjects.length; i++) {
             System.out.print("Enter marks for External " + externalSubjects[i].subname + ": ");
             externalSubjects[i].marksObtained = sc.nextInt();
 
-            System.out.print("Enter marks for Internal " + internalSubjects[i].subname + ": ");
-            internalSubjects[i].marksObtained = sc.nextInt();
+           
+            if (i < internalSubjects.length) {
+                System.out.print("Enter marks for Internal " + internalSubjects[i].subname + ": ");
+                internalSubjects[i].marksObtained = sc.nextInt();
 
-            // Combine internal and external marks and total
-            externalSubjects[i].combinedMarks = externalSubjects[i].marksObtained + internalSubjects[i].marksObtained;
-            externalSubjects[i].combinedTotal = externalSubjects[i].totalMarks + internalSubjects[i].totalMarks;
+              
+                externalSubjects[i].combinedMarks = externalSubjects[i].marksObtained
+                        + internalSubjects[i].marksObtained;
+                externalSubjects[i].combinedTotal = externalSubjects[i].totalMarks + internalSubjects[i].totalMarks;
 
+              
+                if (internalSubjects[i].marksObtained < 0.4 * internalSubjects[i].totalMarks) {
+                    internalKTs++;
+                }
+            } else {
+              
+                externalSubjects[i].combinedMarks = externalSubjects[i].marksObtained;
+                externalSubjects[i].combinedTotal = externalSubjects[i].totalMarks;
+            }
+
+           
             externalSubjects[i].calculateResult();
 
-            // Checking if failed
+        
             if (externalSubjects[i].combinedMarks < 0.4 * externalSubjects[i].combinedTotal) {
                 hasFailed = true;
-                if (externalSubjects[i].totalMarks > 20)
-                    externalKTs++;
-                else
-                    internalKTs++;
+                externalKTs++; 
             }
 
             if (externalSubjects[i].credit > 0) {
@@ -229,11 +244,15 @@ class Table {
 
         if (hasFailed) {
             System.out.println("Unsuccessful");
+            System.out.println("   ");
+            System.out.println("Promoted to second year");
+
             System.out.println("     ");
         } else {
             double cgpa = (double) obtainedCredited / totalCredits;
             double roundedCGPA = roundToThreeDecimal(cgpa);
             System.out.println("CGPI : " + roundedCGPA);
+            System.out.println("  Successful  ");
         }
         System.out.println("-".repeat(110));
     }
